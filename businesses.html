@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Business Listings - CityLocal 101</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .listings-page {
+            padding: 40px 0;
+            background: #f5f7fa;
+            min-height: 100vh;
+        }
+        
+        .listings-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 30px;
+        }
+        
+        .filter-sidebar {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+        }
+        
+        .filter-sidebar h3 {
+            margin: 0 0 20px 0;
+            color: #2C3E50;
+            font-size: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #4A90E2;
+        }
+        
+        .filter-group {
+            margin-bottom: 25px;
+        }
+        
+        .filter-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 500;
+        }
+        
+        .filter-group input,
+        .filter-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        
+        .filter-group input:focus,
+        .filter-group select:focus {
+            outline: none;
+            border-color: #4A90E2;
+        }
+        
+        .filter-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .filter-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+        
+        .clear-filters {
+            width: 100%;
+            padding: 10px;
+            background: #f5f5f5;
+            color: #555;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        
+        .results-area {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        
+        .results-header h2 {
+            margin: 0;
+            color: #2C3E50;
+            font-size: 24px;
+        }
+        
+        .results-count {
+            color: #666;
+            font-size: 16px;
+        }
+        
+        .sort-options {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .sort-options select {
+            padding: 8px 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        
+        .business-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+        }
+        
+        .business-card {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 25px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .business-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            border-color: #4A90E2;
+        }
+        
+        .business-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+        
+        .business-header h3 {
+            margin: 0;
+            color: #2C3E50;
+            font-size: 20px;
+            flex: 1;
+        }
+        
+        .rating {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .stars {
+            color: #FFB800;
+            font-size: 16px;
+        }
+        
+        .rating-value {
+            color: #666;
+            font-weight: 600;
+        }
+        
+        .business-category {
+            display: inline-block;
+            background: #E3F2FD;
+            color: #1976D2;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 500;
+            margin-bottom: 12px;
+        }
+        
+        .business-description {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .business-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 15px;
+            border-top: 1px solid #f0f0f0;
+        }
+        
+        .location {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .location i {
+            color: #4A90E2;
+            margin-right: 5px;
+        }
+        
+        .status {
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .status.open {
+            background: #E8F5E9;
+            color: #2E7D32;
+        }
+        
+        .status.closed {
+            background: #FFEBEE;
+            color: #C62828;
+        }
+        
+        .no-results {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+        }
+        
+        .no-results i {
+            font-size: 64px;
+            color: #ddd;
+            margin-bottom: 20px;
+        }
+        
+        .no-results h3 {
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 60px 20px;
+        }
+        
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #4A90E2;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @media (max-width: 768px) {
+            .listings-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .filter-sidebar {
+                position: relative;
+                top: 0;
+            }
+            
+            .business-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <a href="index.html">
+                        <img src="assets/images/logo.png" alt="CityLocal 101 Logo" class="logo-img">
+                    </a>
+                </div>
+                <nav class="nav">
+                    <ul class="nav-list">
+                        <li><a href="support.html"><i class="fas fa-headset"></i> Support</a></li>
+                        <li><a href="write-review.html"><i class="fas fa-star"></i> Write A Review</a></li>
+                        <li><a href="blog.html"><i class="fas fa-blog"></i> Blog</a></li>
+                        <li><a href="login.html" class="login-btn" id="loginBtn"><i class="fas fa-sign-in-alt"></i> LOGIN</a></li>
+                        <li><a href="add-business.html" class="btn-primary"><i class="fas fa-plus-circle"></i> Add Your Business</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Listings Page -->
+    <section class="listings-page">
+        <div class="listings-container">
+            <!-- Filter Sidebar -->
+            <aside class="filter-sidebar">
+                <h3><i class="fas fa-filter"></i> Filter Results</h3>
+                
+                <div class="filter-group">
+                    <label for="searchQuery">Search</label>
+                    <input type="text" id="searchQuery" placeholder="Business name...">
+                </div>
+                
+                <div class="filter-group">
+                    <label for="categoryFilter">Category</label>
+                    <select id="categoryFilter">
+                        <option value="">All Categories</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label for="locationFilter">Location</label>
+                    <input type="text" id="locationFilter" placeholder="City or State...">
+                </div>
+                
+                <div class="filter-group">
+                    <label for="ratingFilter">Minimum Rating</label>
+                    <select id="ratingFilter">
+                        <option value="">Any Rating</option>
+                        <option value="4">4+ Stars</option>
+                        <option value="3">3+ Stars</option>
+                        <option value="2">2+ Stars</option>
+                        <option value="1">1+ Stars</option>
+                    </select>
+                </div>
+                
+                <button class="filter-btn" id="applyFilters">
+                    <i class="fas fa-search"></i> Apply Filters
+                </button>
+                <button class="clear-filters" id="clearFilters">
+                    <i class="fas fa-times"></i> Clear All
+                </button>
+            </aside>
+            
+            <!-- Results Area -->
+            <div class="results-area">
+                <div class="results-header">
+                    <div>
+                        <h2 id="pageTitle">All Businesses</h2>
+                        <p class="results-count" id="resultsCount">Loading...</p>
+                    </div>
+                    <div class="sort-options">
+                        <label for="sortBy">Sort by:</label>
+                        <select id="sortBy">
+                            <option value="-createdAt">Newest First</option>
+                            <option value="name">Name (A-Z)</option>
+                            <option value="-rating.average">Highest Rated</option>
+                            <option value="-views">Most Popular</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div id="businessGrid" class="business-grid">
+                    <div class="loading">
+                        <div class="spinner"></div>
+                        <p>Loading businesses...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <img src="assets/images/logo.png" alt="CityLocal 101 Logo" class="footer-logo-img">
+                </div>
+                <div class="footer-columns">
+                    <div class="footer-column">
+                        <h4>About</h4>
+                        <ul>
+                            <li><a href="#what-we-do">What we do</a></li>
+                            <li><a href="#faq">FAQ</a></li>
+                            <li><a href="blog.html">Blog</a></li>
+                            <li><a href="#contact">Contact Us</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>Copyright ©2025 CityLocal 101. All Rights Reserved</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Business Detail Modal -->
+    <div class="modal" id="businessModal">
+        <div class="modal-content business-modal-content">
+            <div class="modal-header">
+                <h2 id="businessName">Business Details</h2>
+                <span class="close" id="closeBusinessModal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="business-detail">
+                    <div class="business-rating">
+                        <span class="stars" id="businessStars">★★★★★</span>
+                        <span class="rating-value" id="businessRating">5.0</span>
+                    </div>
+                    <p id="businessDescription"></p>
+                    <div class="business-info">
+                        <p><i class="fas fa-map-marker-alt"></i> <span id="businessLocation"></span></p>
+                        <p><i class="fas fa-phone"></i> <span id="businessPhone">Call for details</span></p>
+                        <p><i class="fas fa-envelope"></i> <span id="businessEmail"></span></p>
+                        <p><i class="fas fa-globe"></i> <span id="businessWebsite"></span></p>
+                        <p><i class="fas fa-clock"></i> <span id="businessHours" class="status open">Opened Now!</span></p>
+                    </div>
+                    <div class="business-actions">
+                        <button class="btn-primary" id="writeReviewBtn"><i class="fas fa-star"></i> Write a Review</button>
+                        <button class="btn-secondary" id="getDirectionsBtn"><i class="fas fa-directions"></i> Get Directions</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="businesses.js"></script>
+</body>
+</html>
+

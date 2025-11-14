@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Support - CityLocal 101</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        .support-hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 80px 0;
+            text-align: center;
+        }
+        .support-hero h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+        .support-container {
+            max-width: 1200px;
+            margin: 60px auto;
+            padding: 0 20px;
+        }
+        .support-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+        .support-card {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: transform 0.3s;
+        }
+        .support-card:hover {
+            transform: translateY(-5px);
+        }
+        .support-card i {
+            font-size: 3rem;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+        .support-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--secondary-color);
+        }
+        .support-form {
+            background: white;
+            padding: 50px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+        .form-group {
+            margin-bottom: 25px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--secondary-color);
+        }
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+        .form-group textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+        .submit-btn {
+            width: 100%;
+            padding: 16px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .submit-btn:hover {
+            background: #357ABD;
+        }
+        .faq-section {
+            margin-top: 80px;
+        }
+        .faq-item {
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        .faq-item h4 {
+            color: var(--secondary-color);
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            .support-form {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <a href="index.html">
+                        <img src="assets/images/logo.png" alt="CityLocal 101 Logo" class="logo-img">
+                    </a>
+                </div>
+                <nav class="nav">
+                    <ul class="nav-list">
+                        <li><a href="support.html"><i class="fas fa-headset"></i> Support</a></li>
+                        <li><a href="write-review.html"><i class="fas fa-star"></i> Write A Review</a></li>
+                        <li><a href="blog.html"><i class="fas fa-blog"></i> Blog</a></li>
+                        <li><a href="login.html" class="login-btn" id="loginBtn"><i class="fas fa-sign-in-alt"></i> LOGIN</a></li>
+                        <li><a href="add-business.html" class="btn-primary"><i class="fas fa-plus-circle"></i> Add Your Business</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero -->
+    <div class="support-hero">
+        <h1><i class="fas fa-headset"></i> How Can We Help You?</h1>
+        <p style="font-size: 1.2rem; opacity: 0.9;">We're here to support you 24/7</p>
+    </div>
+
+    <!-- Support Options -->
+    <div class="support-container">
+        <h2 style="text-align: center; margin-bottom: 40px; font-size: 2rem;">Choose Your Support Channel</h2>
+        
+        <div class="support-grid">
+            <div class="support-card">
+                <i class="fas fa-envelope"></i>
+                <h3>Email Support</h3>
+                <p>Get a response within 24 hours</p>
+                <p><strong>support@citylocal101.com</strong></p>
+            </div>
+            
+            <div class="support-card">
+                <i class="fas fa-phone"></i>
+                <h3>Phone Support</h3>
+                <p>Mon-Fri: 9am - 6pm EST</p>
+                <p><strong>(555) 123-4567</strong></p>
+            </div>
+            
+            <div class="support-card">
+                <i class="fas fa-comments"></i>
+                <h3>Live Chat</h3>
+                <p>Chat with our team instantly</p>
+                <button class="btn-primary" style="margin-top: 15px;">Start Chat</button>
+            </div>
+        </div>
+
+        <!-- Contact Form -->
+        <div class="support-form" id="contact">
+            <h2 style="text-align: center; margin-bottom: 40px;">Send Us a Message</h2>
+            
+            <form id="supportForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="supportName">Your Name *</label>
+                        <input type="text" id="supportName" name="name" autocomplete="name" required placeholder="John Doe">
+                    </div>
+                    <div class="form-group">
+                        <label for="supportEmail">Your Email *</label>
+                        <input type="email" id="supportEmail" name="email" autocomplete="email" required placeholder="john@example.com">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="supportSubject">Subject *</label>
+                    <select id="supportSubject" name="subject" autocomplete="off" required>
+                        <option value="">Select a topic</option>
+                        <option value="account">Account Issues</option>
+                        <option value="business">Business Listing</option>
+                        <option value="review">Review Issues</option>
+                        <option value="technical">Technical Support</option>
+                        <option value="billing">Billing Questions</option>
+                        <option value="feedback">Feedback</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="supportMessage">Message *</label>
+                    <textarea id="supportMessage" name="message" autocomplete="off" required placeholder="Describe your issue or question in detail..."></textarea>
+                </div>
+                
+                <button type="submit" class="submit-btn">
+                    <i class="fas fa-paper-plane"></i> Send Message
+                </button>
+            </form>
+        </div>
+
+        <!-- FAQ Section -->
+        <div class="faq-section" id="faq">
+            <h2 style="text-align: center; margin-bottom: 40px; font-size: 2rem;">Frequently Asked Questions</h2>
+            
+            <div class="faq-item">
+                <h4><i class="fas fa-question-circle" style="color: var(--primary-color);"></i> How do I add my business?</h4>
+                <p>Adding your business is FREE and easy! Click "Add Your Business" in the header, fill out the form with your business details, and submit. We'll review and approve it within 24 hours.</p>
+            </div>
+            
+            <div class="faq-item">
+                <h4><i class="fas fa-question-circle" style="color: var(--primary-color);"></i> How do I write a review?</h4>
+                <p>Click "Write A Review" in the header, search for the business, rate it with stars (1-5), write your experience, and submit. Reviews help other customers make informed decisions.</p>
+            </div>
+            
+            <div class="faq-item">
+                <h4><i class="fas fa-question-circle" style="color: var(--primary-color);"></i> Is CityLocal 101 free to use?</h4>
+                <p>Yes! CityLocal 101 is completely free for users to browse businesses, read reviews, and write reviews. Business listings are also FREE to add and maintain.</p>
+            </div>
+            
+            <div class="faq-item">
+                <h4><i class="fas fa-question-circle" style="color: var(--primary-color);"></i> How do I claim my business?</h4>
+                <p>If your business is already listed, contact us at support@citylocal101.com with your business name and proof of ownership. We'll grant you access to manage your listing.</p>
+            </div>
+            
+            <div class="faq-item">
+                <h4><i class="fas fa-question-circle" style="color: var(--primary-color);"></i> Can I edit or delete my review?</h4>
+                <p>Yes! Log into your account, go to your profile, find the review you want to edit or delete, and make your changes. Review edits are subject to moderation.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <img src="assets/images/logo.png" alt="CityLocal 101 Logo" class="footer-logo-img">
+                </div>
+                <div class="footer-columns">
+                    <div class="footer-column">
+                        <h4>About</h4>
+                        <ul>
+                            <li><a href="index.html">Home</a></li>
+                            <li><a href="blog.html">Blog</a></li>
+                            <li><a href="support.html">Contact Us</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h4>For Businesses</h4>
+                        <ul>
+                            <li><a href="add-business.html">Add a Business</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h4>For Reviewers</h4>
+                        <ul>
+                            <li><a href="write-review.html">Write a Review</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>Copyright ©2025 CityLocal 101. All Rights Reserved</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="support.js"></script>
+</body>
+</html>
+
+

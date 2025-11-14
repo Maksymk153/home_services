@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Write a Review - CityLocal 101</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .review-hero {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 80px 0;
+            text-align: center;
+        }
+        .review-hero h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+        .review-container {
+            max-width: 900px;
+            margin: 60px auto;
+            padding: 0 20px;
+        }
+        .review-form {
+            background: white;
+            padding: 50px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        .star-rating {
+            font-size: 48px;
+            margin: 30px 0;
+            text-align: center;
+            cursor: pointer;
+        }
+        .star-rating i {
+            color: #ddd;
+            transition: color 0.2s;
+            margin: 0 5px;
+        }
+        .star-rating i:hover,
+        .star-rating i.fas {
+            color: #FFD700;
+        }
+        .rating-label {
+            text-align: center;
+            font-size: 1.5rem;
+            color: var(--secondary-color);
+            margin-bottom: 30px;
+        }
+        .form-group {
+            margin-bottom: 25px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--secondary-color);
+        }
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+            background-color: white;
+        }
+        .form-group select {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23333' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+            padding-right: 40px;
+        }
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+        .form-group textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+        .submit-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        .submit-btn:hover {
+            transform: translateY(-2px);
+        }
+        .tips-section {
+            background: #f5f5f5;
+            padding: 30px;
+            border-radius: 8px;
+            margin-top: 40px;
+        }
+        .tips-section h3 {
+            color: var(--secondary-color);
+            margin-bottom: 15px;
+        }
+        .tips-section ul {
+            list-style: none;
+            padding: 0;
+        }
+        .tips-section ul li {
+            padding: 10px 0;
+            padding-left: 30px;
+            position: relative;
+        }
+        .tips-section ul li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: var(--success-color);
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <a href="index.html">
+                        <img src="assets/images/logo.png" alt="CityLocal 101 Logo" class="logo-img">
+                    </a>
+                </div>
+                <nav class="nav">
+                    <ul class="nav-list">
+                        <li><a href="support.html"><i class="fas fa-headset"></i> Support</a></li>
+                        <li><a href="write-review.html"><i class="fas fa-star"></i> Write A Review</a></li>
+                        <li><a href="blog.html"><i class="fas fa-blog"></i> Blog</a></li>
+                        <li><a href="login.html" class="login-btn" id="loginBtn"><i class="fas fa-sign-in-alt"></i> LOGIN</a></li>
+                        <li><a href="add-business.html" class="btn-primary"><i class="fas fa-plus-circle"></i> Add Your Business</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero -->
+    <div class="review-hero">
+        <h1><i class="fas fa-star"></i> Write a Review</h1>
+        <p style="font-size: 1.2rem; opacity: 0.9;">Share your experience and help others make informed decisions</p>
+    </div>
+
+    <!-- Review Form -->
+    <div class="review-container">
+        <div class="review-form">
+            <h2 style="text-align: center; margin-bottom: 40px;">Tell Us About Your Experience</h2>
+            
+            <form id="reviewForm">
+                <div class="form-group">
+                    <label for="businessName">Business Name *</label>
+                    <select id="businessName" required>
+                        <option value="">Select a business...</option>
+                    </select>
+                </div>
+                
+                <div class="rating-label">How would you rate this business?</div>
+                <div class="star-rating" id="starRating">
+                    <i class="far fa-star" data-rating="1"></i>
+                    <i class="far fa-star" data-rating="2"></i>
+                    <i class="far fa-star" data-rating="3"></i>
+                    <i class="far fa-star" data-rating="4"></i>
+                    <i class="far fa-star" data-rating="5"></i>
+                </div>
+                <input type="hidden" id="rating" name="rating" value="0" required>
+                <p id="ratingText" style="text-align: center; color: #999; margin-bottom: 30px;">Click on stars to rate</p>
+                
+                <div class="form-group">
+                    <label for="reviewTitle">Review Title *</label>
+                    <input type="text" id="reviewTitle" required placeholder="Sum up your experience">
+                </div>
+                
+                <div class="form-group">
+                    <label for="reviewComment">Your Review *</label>
+                    <textarea id="reviewComment" required placeholder="Share details about your experience..."></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="reviewerName">Your Name *</label>
+                    <input type="text" id="reviewerName" name="reviewerName" autocomplete="name" required placeholder="Your name">
+                </div>
+                
+                <div class="form-group">
+                    <label for="reviewerEmail">Your Email *</label>
+                    <input type="email" id="reviewerEmail" name="reviewerEmail" autocomplete="email" required placeholder="your@email.com">
+                </div>
+                
+                <button type="submit" class="submit-btn">
+                    <i class="fas fa-paper-plane"></i> Submit Review
+                </button>
+            </form>
+        </div>
+
+        <!-- Tips Section -->
+        <div class="tips-section">
+            <h3>Tips for Writing a Great Review</h3>
+            <ul>
+                <li>Be specific about what you liked or didn't like</li>
+                <li>Describe the atmosphere, service quality, and overall experience</li>
+                <li>Mention any standout staff members who provided excellent service</li>
+                <li>Include details about pricing and value for money</li>
+                <li>Be honest and constructive with your feedback</li>
+                <li>Keep it respectful and professional</li>
+                <li>Update your review if the business improves or changes</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <img src="assets/images/logo.png" alt="CityLocal 101 Logo" class="footer-logo-img">
+                </div>
+                <div class="footer-columns">
+                    <div class="footer-column">
+                        <h4>About</h4>
+                        <ul>
+                            <li><a href="index.html">Home</a></li>
+                            <li><a href="blog.html">Blog</a></li>
+                            <li><a href="support.html">Contact Us</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h4>For Businesses</h4>
+                        <ul>
+                            <li><a href="add-business.html">Add a Business</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h4>For Reviewers</h4>
+                        <ul>
+                            <li><a href="write-review.html">Write a Review</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>Copyright ©2025 CityLocal 101. All Rights Reserved</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="write-review.js"></script>
+</body>
+</html>
+
+

@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - CityLocal 101</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .login-hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 60px 0;
+            text-align: center;
+        }
+        .login-hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+        .login-hero p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        .login-container {
+            max-width: 500px;
+            margin: 60px auto;
+            padding: 0 20px;
+        }
+        .login-card {
+            background: white;
+            padding: 50px;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+        .login-card h2 {
+            text-align: center;
+            color: var(--secondary-color);
+            margin-bottom: 30px;
+            font-size: 2rem;
+        }
+        .form-group {
+            margin-bottom: 25px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-color);
+            font-weight: 600;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 14px 18px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+        }
+        .forgot-password {
+            text-align: right;
+            margin-bottom: 25px;
+        }
+        .forgot-password a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+        .forgot-password a:hover {
+            text-decoration: underline;
+        }
+        .login-btn-full {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #4A90E2 0%, #357ABD 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 20px;
+        }
+        .login-btn-full:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(74, 144, 226, 0.4);
+        }
+        .register-link {
+            text-align: center;
+            margin-top: 25px;
+            padding-top: 25px;
+            border-top: 1px solid var(--border-color);
+        }
+        .register-link p {
+            color: #666;
+            margin-bottom: 10px;
+        }
+        .register-link a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+        .toast {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            padding: 15px 25px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            z-index: 10000;
+            animation: slideIn 0.3s;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        .toast.success {
+            background: var(--success-color);
+        }
+        .toast.error {
+            background: #E74C3C;
+        }
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <a href="index.html">
+                        <img src="assets/images/logo.png" alt="CityLocal 101 Logo" class="logo-img">
+                    </a>
+                </div>
+                <nav class="nav">
+                    <ul class="nav-list">
+                        <li><a href="support.html"><i class="fas fa-headset"></i> Support</a></li>
+                        <li><a href="write-review.html"><i class="fas fa-star"></i> Write A Review</a></li>
+                        <li><a href="blog.html"><i class="fas fa-blog"></i> Blog</a></li>
+                        <li><a href="login.html" class="login-btn" id="loginBtn"><i class="fas fa-sign-in-alt"></i> LOGIN</a></li>
+                        <li><a href="add-business.html" class="btn-primary"><i class="fas fa-plus-circle"></i> Add Your Business</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Login Hero -->
+    <section class="login-hero">
+        <div class="container">
+            <h1><i class="fas fa-sign-in-alt"></i> Welcome Back</h1>
+            <p>Sign in to access your account and manage your business listings</p>
+        </div>
+    </section>
+
+    <!-- Login Form -->
+    <section class="login-container">
+        <div class="login-card">
+            <h2>Login to Your Account</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="loginEmail"><i class="fas fa-envelope"></i> Email Address</label>
+                    <input type="email" id="loginEmail" name="email" autocomplete="email" required placeholder="your@email.com">
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword"><i class="fas fa-lock"></i> Password</label>
+                    <input type="password" id="loginPassword" name="password" autocomplete="current-password" required placeholder="Enter your password">
+                </div>
+                <div class="forgot-password">
+                    <a href="#forgot">Forgot Password?</a>
+                </div>
+                <button type="submit" class="login-btn-full">
+                    <i class="fas fa-sign-in-alt"></i> Sign In
+                </button>
+            </form>
+            
+            <div class="register-link">
+                <p>Don't have an account?</p>
+                <a href="register.html">Create a new account <i class="fas fa-arrow-right"></i></a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <img src="assets/images/logo.png" alt="CityLocal 101 Logo" class="footer-logo-img">
+                    <p>CityLocal 101 connects residents with trusted local businesses and services across the country.</p>
+                    <div class="footer-socials">
+                        <a href="https://www.facebook.com/" target="_blank" rel="noopener" aria-label="Follow CityLocal 101 on Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://www.instagram.com/" target="_blank" rel="noopener" aria-label="Follow CityLocal 101 on Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="https://www.linkedin.com/" target="_blank" rel="noopener" aria-label="Follow CityLocal 101 on LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="footer-columns">
+                    <div class="footer-column">
+                        <h4>Explore</h4>
+                        <ul>
+                            <li><a href="index.html#categoriesSection">Browse Categories</a></li>
+                            <li><a href="index.html#businessesSection">Featured Listings</a></li>
+                            <li><a href="businesses.html">Business Directory</a></li>
+                            <li><a href="search-results.html">Search CityLocal 101</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Support</h4>
+                        <ul>
+                            <li><a href="support.html#contact">Contact Support</a></li>
+                            <li><a href="support.html#faq">FAQs</a></li>
+                            <li><a href="write-review.html">Write a Review</a></li>
+                            <li><a href="add-business.html">Add Your Business</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Account</h4>
+                        <ul>
+                            <li><a href="login.html">Member Login</a></li>
+                            <li><a href="register.html">Create Account</a></li>
+                            <li><a href="support.html#contact">Reset Password</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Legal</h4>
+                        <ul>
+                            <li><a href="terms.html">Terms & Conditions</a></li>
+                            <li><a href="privacy.html">Privacy Policy</a></li>
+                            <li><a href="support.html#contact">Report an Issue</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>Copyright ©2025 CityLocal 101. All Rights Reserved.</p>
+                <div class="footer-bottom-links">
+                    <a href="terms.html">Terms</a>
+                    <span>•</span>
+                    <a href="privacy.html">Privacy</a>
+                    <span>•</span>
+                    <a href="support.html#contact">Contact</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="login.js"></script>
+</body>
+</html>
+

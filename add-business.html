@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Your Business - CityLocal 101</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .add-business-hero {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 60px 0;
+            text-align: center;
+        }
+        .add-business-hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+        .add-business-hero p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        .add-business-container {
+            max-width: 900px;
+            margin: 60px auto;
+            padding: 0 20px;
+        }
+        .add-business-card {
+            background: white;
+            padding: 50px;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+        .add-business-card h2 {
+            text-align: center;
+            color: var(--secondary-color);
+            margin-bottom: 10px;
+            font-size: 2rem;
+        }
+        .add-business-card .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 40px;
+        }
+        .form-section {
+            margin-bottom: 40px;
+            padding-bottom: 40px;
+            border-bottom: 2px solid var(--light-gray);
+        }
+        .form-section:last-child {
+            border-bottom: none;
+        }
+        .form-section h3 {
+            color: var(--secondary-color);
+            margin-bottom: 25px;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        .form-group {
+            margin-bottom: 25px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-color);
+            font-weight: 600;
+        }
+        .form-group label .required {
+            color: #E74C3C;
+        }
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 14px 18px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+        }
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        .form-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 40px;
+        }
+        .btn-submit {
+            padding: 16px 40px;
+            background: linear-gradient(135deg, #4A90E2 0%, #357ABD 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(74, 144, 226, 0.3);
+        }
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(74, 144, 226, 0.4);
+        }
+        .btn-cancel {
+            padding: 16px 40px;
+            background: white;
+            color: var(--text-color);
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .btn-cancel:hover {
+            background: var(--light-gray);
+        }
+        .info-box {
+            background: #E3F2FD;
+            border-left: 4px solid var(--primary-color);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        .info-box p {
+            margin: 0;
+            color: #1976D2;
+        }
+        .location-suggestions {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 2px solid var(--border-color);
+            border-top: none;
+            border-radius: 0 0 8px 8px;
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            margin-top: -2px;
+        }
+        .location-suggestion-item {
+            padding: 12px 18px;
+            cursor: pointer;
+            border-bottom: 1px solid var(--border-color);
+            transition: background-color 0.2s;
+        }
+        .location-suggestion-item:last-child {
+            border-bottom: none;
+        }
+        .location-suggestion-item:hover {
+            background-color: var(--light-gray);
+        }
+        .location-suggestion-item.selected {
+            background-color: #E3F2FD;
+            color: var(--primary-color);
+        }
+        .toast {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            padding: 15px 25px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            z-index: 10000;
+            animation: slideIn 0.3s;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        .toast.success {
+            background: var(--success-color);
+        }
+        .toast.error {
+            background: #E74C3C;
+        }
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <a href="index.html">
+                        <img src="assets/images/logo.png" alt="CityLocal 101 Logo" class="logo-img">
+                    </a>
+                </div>
+                <nav class="nav">
+                    <ul class="nav-list">
+                        <li><a href="support.html"><i class="fas fa-headset"></i> Support</a></li>
+                        <li><a href="write-review.html"><i class="fas fa-star"></i> Write A Review</a></li>
+                        <li><a href="blog.html"><i class="fas fa-blog"></i> Blog</a></li>
+                        <li><a href="login.html" class="login-btn" id="loginBtn"><i class="fas fa-sign-in-alt"></i> LOGIN</a></li>
+                        <li><a href="add-business.html" class="btn-primary"><i class="fas fa-plus-circle"></i> Add Your Business</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Add Business Hero -->
+    <section class="add-business-hero">
+        <div class="container">
+            <h1><i class="fas fa-building"></i> Add Your Business</h1>
+            <p>Join thousands of businesses on CityLocal 101 - It's FREE!</p>
+        </div>
+    </section>
+
+    <!-- Add Business Form -->
+    <section class="add-business-container">
+        <div class="add-business-card">
+            <h2>Business Information</h2>
+            <p class="subtitle">Fill out the form below to get your business listed</p>
+            
+            <div class="info-box">
+                <p><i class="fas fa-info-circle"></i> Your business will be reviewed by our team before being published. This usually takes 24-48 hours.</p>
+            </div>
+            
+            <form id="addBusinessForm">
+                <!-- Business Details -->
+                <div class="form-section">
+                    <h3><i class="fas fa-building"></i> Business Details</h3>
+                    <div class="form-group">
+                        <label for="businessName">Business Name <span class="required">*</span></label>
+                        <input type="text" id="businessName" name="businessName" autocomplete="organization" required placeholder="Your Business Name">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="businessCategory">Category <span class="required">*</span></label>
+                            <select id="businessCategory" name="businessCategory" required>
+                                <option value="">Select a category</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="businessPhone">Phone Number <span class="required">*</span></label>
+                            <input type="tel" id="businessPhone" name="businessPhone" autocomplete="tel" required placeholder="(555) 123-4567">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="businessDescription">Description <span class="required">*</span></label>
+                        <textarea id="businessDescription" name="businessDescription" required placeholder="Tell customers about your business, services, and what makes you unique..."></textarea>
+                    </div>
+                </div>
+                
+                <!-- Location -->
+                <div class="form-section">
+                    <h3><i class="fas fa-map-marker-alt"></i> Location</h3>
+                    <div class="form-group">
+                        <label for="businessAddress">Street Address <span class="required">*</span></label>
+                        <input type="text" id="businessAddress" name="businessAddress" autocomplete="street-address" required placeholder="123 Main Street">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group" style="position: relative;">
+                            <label for="businessCity">City <span class="required">*</span></label>
+                            <input type="text" id="businessCity" name="businessCity" autocomplete="address-level2" required placeholder="City">
+                            <div id="citySuggestions" class="location-suggestions" style="display: none;"></div>
+                        </div>
+                        <div class="form-group" style="position: relative;">
+                            <label for="businessState">State <span class="required">*</span></label>
+                            <input type="text" id="businessState" name="businessState" autocomplete="address-level1" required placeholder="State">
+                            <div id="stateSuggestions" class="location-suggestions" style="display: none;"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="businessZip">Zip Code</label>
+                            <input type="text" id="businessZip" name="businessZip" autocomplete="postal-code" placeholder="12345">
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Contact Information -->
+                <div class="form-section">
+                    <h3><i class="fas fa-envelope"></i> Contact Information</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="businessEmail">Email Address</label>
+                            <input type="email" id="businessEmail" name="businessEmail" autocomplete="email" placeholder="business@email.com">
+                        </div>
+                        <div class="form-group">
+                            <label for="businessWebsite">Website</label>
+                            <input type="url" id="businessWebsite" name="businessWebsite" placeholder="https://yourbusiness.com">
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Owner Information -->
+                <div class="form-section">
+                    <h3><i class="fas fa-user"></i> Owner Information</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="ownerName">Your Name <span class="required">*</span></label>
+                            <input type="text" id="ownerName" name="ownerName" autocomplete="name" required placeholder="Your name">
+                        </div>
+                        <div class="form-group">
+                            <label for="ownerEmail">Your Email <span class="required">*</span></label>
+                            <input type="email" id="ownerEmail" name="ownerEmail" autocomplete="email" required placeholder="your@email.com">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn-cancel" id="cancelBtn">Cancel</button>
+                    <button type="submit" class="btn-submit">
+                        <i class="fas fa-paper-plane"></i> Submit Business
+                    </button>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <img src="assets/images/logo.png" alt="CityLocal 101 Logo" class="footer-logo-img">
+                </div>
+                <div class="footer-columns">
+                    <div class="footer-column">
+                        <h4>About</h4>
+                        <ul>
+                            <li><a href="#what-we-do">What we do</a></li>
+                            <li><a href="#faq">FAQ</a></li>
+                            <li><a href="blog.html">Blog</a></li>
+                            <li><a href="#contact">Contact Us</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>Copyright ©2025 CityLocal 101. All Rights Reserved</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="add-business.js"></script>
+</body>
+</html>
+
