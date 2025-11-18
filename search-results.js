@@ -1,4 +1,7 @@
-const API_URL = '/api';
+// Use API_URL from global scope if available, otherwise declare it
+if (typeof API_URL === 'undefined') {
+    var API_URL = '/api';
+}
 
 // Get URL parameters
 function getURLParams() {

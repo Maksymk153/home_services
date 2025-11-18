@@ -187,8 +187,21 @@ body {
 
 .mobile-menu-toggle {
     display: none;
-    font-size: 24px;
+    font-size: 28px;
     cursor: pointer;
+    color: var(--text-color);
+    padding: 8px;
+    transition: all 0.3s ease;
+    z-index: 1001;
+}
+
+.mobile-menu-toggle:hover {
+    color: var(--primary-color);
+    transform: scale(1.1);
+}
+
+.mobile-menu-toggle i {
+    transition: transform 0.3s ease;
 }
 
 /* Hero Section */
@@ -1011,24 +1024,46 @@ body {
 
 /* Responsive Design */
 @media (max-width: 768px) {
+    .header-content {
+        position: relative;
+    }
+    
     .nav-list {
         display: none;
-        position: absolute;
-        top: 100%;
+        position: fixed;
+        top: 80px;
         left: 0;
         right: 0;
         background-color: var(--white);
         flex-direction: column;
         padding: 20px;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        z-index: 1000;
+        max-height: calc(100vh - 80px);
+        overflow-y: auto;
+        animation: slideDown 0.3s ease-out;
     }
 
     .nav-list.active {
         display: flex;
     }
+    
+    .nav-list li {
+        width: 100%;
+    }
+    
+    .nav-list a {
+        width: 100%;
+        padding: 15px 20px;
+        justify-content: flex-start;
+        border-radius: 8px;
+        margin-bottom: 8px;
+    }
 
     .mobile-menu-toggle {
-        display: block;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
     .hero-content h1 {

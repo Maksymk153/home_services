@@ -63,12 +63,71 @@
         .terms-checkbox {
             display: flex;
             align-items: flex-start;
-            gap: 12px;
+            gap: 15px;
             font-size: 0.95rem;
             color: #666;
+            cursor: pointer;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            background: #f9f9f9;
         }
-        .terms-checkbox input {
-            margin-top: 4px;
+        .terms-checkbox:hover {
+            border-color: var(--primary-color);
+            background: #f5f9ff;
+        }
+        .terms-checkbox input[type="checkbox"] {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+            height: 0;
+            width: 0;
+        }
+        .terms-checkbox .custom-checkbox {
+            position: relative;
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            min-width: 24px;
+            min-height: 24px;
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            margin-top: 2px;
+        }
+        .terms-checkbox input[type="checkbox"]:checked ~ .custom-checkbox {
+            background: linear-gradient(135deg, #4A90E2 0%, #357ABD 100%);
+            border-color: var(--primary-color);
+        }
+        .terms-checkbox input[type="checkbox"]:checked ~ .custom-checkbox::after {
+            content: '';
+            position: absolute;
+            left: 8px;
+            top: 4px;
+            width: 6px;
+            height: 12px;
+            border: solid white;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+        }
+        .terms-checkbox input[type="checkbox"]:focus ~ .custom-checkbox {
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2);
+        }
+        .terms-checkbox span {
+            flex: 1;
+            line-height: 1.6;
+        }
+        .terms-checkbox a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+        .terms-checkbox a:hover {
+            color: #357ABD;
+            text-decoration: underline;
         }
         .register-btn-full {
             width: 100%;
@@ -156,6 +215,9 @@
                         <li><a href="add-business.html" class="btn-primary"><i class="fas fa-plus-circle"></i> Add Your Business</a></li>
                     </ul>
                 </nav>
+                <div class="mobile-menu-toggle" id="mobileMenuToggle">
+                    <i class="fas fa-bars"></i>
+                </div>
             </div>
         </div>
     </header>
@@ -191,7 +253,8 @@
                 </div>
                 <div class="form-group">
                     <label class="terms-checkbox">
-                        <input type="checkbox" id="acceptTerms" required>
+                        <input type="checkbox" id="acceptTerms" name="acceptTerms" required>
+                        <span class="custom-checkbox"></span>
                         <span>I agree to the <a href="terms.html" target="_blank">Terms & Conditions</a> and <a href="privacy.html" target="_blank">Privacy Policy</a>.</span>
                     </label>
                 </div>
@@ -268,6 +331,8 @@
         </div>
     </footer>
 
+    <script src="auth-shared.js"></script>
+    <script src="mobile-menu.js"></script>
     <script src="register.js"></script>
 </body>
 </html>

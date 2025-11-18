@@ -3,12 +3,19 @@
 // ====================
 
 // API Configuration
-const API_URL = '/api';
+// Use API_URL from global scope if available, otherwise declare it
+if (typeof API_URL === 'undefined') {
+    var API_URL = '/api';
+}
+
 let currentUser = null;
 let authToken = localStorage.getItem('userToken');
 
 // Check if user is logged in on page load
 document.addEventListener('DOMContentLoaded', function() {
+    // Initialize mobile menu
+    initMobileMenu();
+    
     // Check authentication
     if (authToken) {
         checkAuth();
@@ -28,6 +35,57 @@ document.addEventListener('DOMContentLoaded', function() {
     initCategoryCards();
     initBusinessCards();
 });
+
+// ====================
+// MOBILE MENU
+// ====================
+function initMobileMenu() {
+    const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+    const navList = document.querySelector('.nav-list');
+    
+    if (mobileMenuToggle && navList) {
+        mobileMenuToggle.addEventListener('click', function(e) {
+            e.stopPropagation();
+            navList.classList.toggle('active');
+            
+            // Toggle icon between bars and times
+            const icon = mobileMenuToggle.querySelector('i');
+            if (icon) {
+                if (navList.classList.contains('active')) {
+                    icon.classList.remove('fa-bars');
+                    icon.classList.add('fa-times');
+                } else {
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-bars');
+                }
+            }
+        });
+        
+        // Close menu when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!mobileMenuToggle.contains(e.target) && !navList.contains(e.target)) {
+                navList.classList.remove('active');
+                const icon = mobileMenuToggle.querySelector('i');
+                if (icon) {
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-bars');
+                }
+            }
+        });
+        
+        // Close menu when clicking on a link
+        navList.addEventListener('click', function(e) {
+            if (e.target.tagName === 'A' || e.target.closest('a')) {
+                navList.classList.remove('active');
+                const icon = mobileMenuToggle.querySelector('i');
+                if (icon) {
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-bars');
+                }
+            }
+        });
+    }
+}
 
 // ====================
 // AUTHENTICATION

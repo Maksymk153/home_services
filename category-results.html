@@ -207,6 +207,9 @@
                         <li><a href="add-business.html" class="btn-primary">Add Your Business</a></li>
                     </ul>
                 </nav>
+                <div class="mobile-menu-toggle" id="mobileMenuToggle">
+                    <i class="fas fa-bars"></i>
+                </div>
             </div>
         </div>
     </header>
@@ -417,6 +420,8 @@
         const businessCount = document.querySelectorAll('.business-item').length;
         document.getElementById('resultsCount').textContent = businessCount;
     </script>
+    <script src="auth-shared.js"></script>
+    <script src="mobile-menu.js"></script>
 </body>
 </html>
 

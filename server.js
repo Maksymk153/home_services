@@ -120,13 +120,45 @@ app.use((err, req, res, next) => {
 // Database connection
 const connectDB = async () => {
     try {
-        const conn = await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/citylocal101', {
-            useNewUrlParser: true,
-            useUnifiedTopology: true
-        });
-        console.log(`MongoDB Connected: ${conn.connection.host}`);
+        // Get MongoDB URI from environment or use local MongoDB as default
+        const mongoURI = process.env.MONGODB_URI || 'mongodb://localhost:27017/citylocal101';
+        
+        // Remove deprecated options - they're no longer needed in Mongoose 8+
+        const conn = await mongoose.connect(mongoURI);
+        
+        console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
+        console.log(`📊 Database: ${conn.connection.name}`);
     } catch (error) {
-        console.error(`Error: ${error.message}`);
+        console.error(`\n❌ MongoDB Connection Error: ${error.message}\n`);
+        
+        // Provide helpful error messages based on the error type
+        if (error.message.includes('IP') || error.message.includes('whitelist')) {
+            console.error('⚠️  MongoDB Atlas IP Whitelist Issue:');
+            console.error('   1. Go to: https://cloud.mongodb.com/');
+            console.error('   2. Select your cluster → Security → Network Access');
+            console.error('   3. Click "Add IP Address" and add your current IP');
+            console.error('   4. Or use "0.0.0.0/0" for development (not recommended for production)\n');
+        } else if (error.message.includes('authentication')) {
+            console.error('⚠️  MongoDB Authentication Error:');
+            console.error('   Check your MONGODB_URI connection string in .env file');
+            console.error('   Format: mongodb+srv://username:password@cluster.mongodb.net/database\n');
+        } else if (error.message.includes('ECONNREFUSED')) {
+            console.error('⚠️  Local MongoDB Connection Refused:');
+            console.error('   1. Make sure MongoDB is installed and running');
+            console.error('   2. Start MongoDB service:');
+            console.error('      - Windows: net start MongoDB');
+            console.error('      - Mac/Linux: sudo systemctl start mongod');
+            console.error('   3. Or install MongoDB Community Edition: https://www.mongodb.com/try/download/community\n');
+        } else {
+            console.error('⚠️  Troubleshooting Tips:');
+            console.error('   1. Check if MONGODB_URI is set correctly in .env file');
+            console.error('   2. Verify MongoDB server is running');
+            console.error('   3. Check network connectivity\n');
+        }
+        
+        console.error('💡 For local development, you can use: mongodb://localhost:27017/citylocal101');
+        console.error('💡 Or set MONGODB_URI in your .env file\n');
+        
         process.exit(1);
     }
 };

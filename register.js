@@ -1,4 +1,7 @@
-const API_URL = '/api';
+// Use API_URL from global scope if available, otherwise declare it
+if (typeof API_URL === 'undefined') {
+    var API_URL = '/api';
+}
 
 function showToast(message, type = 'success') {
     const toast = document.createElement('div');
@@ -67,9 +70,10 @@ document.addEventListener('DOMContentLoaded', function() {
             const data = await response.json();
 
             if (response.ok && data.success) {
+                // Store token (use consistent key for all pages)
                 if (data.token) {
-                    localStorage.setItem('token', data.token);
                     localStorage.setItem('userToken', data.token);
+                    localStorage.setItem('token', data.token); // Keep for compatibility
                 }
                 if (data.user) {
                     localStorage.setItem('user', JSON.stringify(data.user));
