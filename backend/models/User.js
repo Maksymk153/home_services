@@ -50,11 +50,65 @@ const User = sequelize.define('User', {
     allowNull: true
   },
   avatar: {
-    type: DataTypes.STRING(255),
+    type: DataTypes.TEXT('long'),
     allowNull: true,
-    defaultValue: ''
+    defaultValue: null
   },
   lastLogin: {
+    type: DataTypes.DATE,
+    allowNull: true
+  },
+  firstName: {
+    type: DataTypes.STRING(50),
+    allowNull: true
+  },
+  lastName: {
+    type: DataTypes.STRING(50),
+    allowNull: true
+  },
+  gender: {
+    type: DataTypes.ENUM('male', 'female', 'other'),
+    allowNull: true
+  },
+  username: {
+    type: DataTypes.STRING(50),
+    allowNull: true,
+    unique: true
+  },
+  secondEmail: {
+    type: DataTypes.STRING(100),
+    allowNull: true
+  },
+  address: {
+    type: DataTypes.STRING(255),
+    allowNull: true
+  },
+  city: {
+    type: DataTypes.STRING(100),
+    allowNull: true
+  },
+  state: {
+    type: DataTypes.STRING(100),
+    allowNull: true
+  },
+  country: {
+    type: DataTypes.STRING(100),
+    allowNull: true,
+    defaultValue: 'USA'
+  },
+  zipCode: {
+    type: DataTypes.STRING(20),
+    allowNull: true
+  },
+  isEmailVerified: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false
+  },
+  emailVerificationToken: {
+    type: DataTypes.STRING(255),
+    allowNull: true
+  },
+  emailVerificationExpires: {
     type: DataTypes.DATE,
     allowNull: true
   }

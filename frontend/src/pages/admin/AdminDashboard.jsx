@@ -16,7 +16,6 @@ const AdminDashboard = () => {
       const response = await api.get('/admin/stats');
       setStats(response.data.stats);
     } catch (error) {
-      console.error('Error loading stats:', error);
     } finally {
       setLoading(false);
     }
@@ -121,7 +120,15 @@ const AdminDashboard = () => {
                     <tr key={user.id}>
                       <td>{user.name}</td>
                       <td>{user.email}</td>
-                      <td><span className="badge">{user.role}</span></td>
+                      <td>
+                        <span className={`badge ${
+                          user.role === 'admin' ? 'danger' : 
+                          user.role === 'business_owner' ? 'info' : 
+                          'success'
+                        }`}>
+                          {user.role || 'user'}
+                        </span>
+                      </td>
                       <td>{new Date(user.createdAt).toLocaleDateString()}</td>
                     </tr>
                   ))

@@ -20,7 +20,6 @@ const BlogDetail = () => {
       const response = await api.get(`/blogs/${slug}`);
       setBlog(response.data.blog);
     } catch (error) {
-      console.error('Error loading blog:', error);
       setError('Blog not found');
     } finally {
       setLoading(false);
@@ -76,7 +75,7 @@ const BlogDetail = () => {
             ))}
           </div>
           
-          {blog.tags && blog.tags.length > 0 && (
+          {blog.tags && Array.isArray(blog.tags) && blog.tags.length > 0 && (
             <div className="blog-tags">
               <i className="fas fa-tags"></i>
               {blog.tags.map((tag, index) => (

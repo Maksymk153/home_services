@@ -39,8 +39,40 @@ router.get('/', async (req, res) => {
       reviews
     });
   } catch (error) {
-    console.error('Get reviews error:', error);
+    console.log('Get reviews error:', error);
     res.status(500).json({ error: 'Server error' });
+  }
+});
+
+// @route   GET /api/reviews/my-reviews
+// @desc    Get current user's reviews
+// @access  Private
+router.get('/my-reviews', protect, async (req, res) => {
+  try {
+    const reviews = await Review.findAll({
+      where: { userId: req.user.id },
+      include: [
+        { model: Business, as: 'business', attributes: ['id', 'name', 'slug'] }
+      ],
+      order: [['createdAt', 'DESC']]
+    });
+
+    // Map to match frontend expectations
+    const formattedReviews = reviews.map(r => {
+      const json = r.toJSON();
+      return {
+        ...json,
+        Business: json.business
+      };
+    });
+
+    res.json({
+      success: true,
+      reviews: formattedReviews
+    });
+  } catch (error) {
+    console.log('Get my reviews error:', error);
+    res.status(500).json({ error: 'Failed to fetch reviews' });
   }
 });
 
@@ -65,7 +97,7 @@ router.get('/:id', async (req, res) => {
       review
     });
   } catch (error) {
-    console.error('Get review error:', error);
+    console.log('Get review error:', error);
     res.status(500).json({ error: 'Server error' });
   }
 });
@@ -151,7 +183,7 @@ router.post('/', protect, async (req, res) => {
       review
     });
   } catch (error) {
-    console.error('Create review error:', error);
+    console.log('Create review error:', error);
     res.status(500).json({ 
       success: false,
       error: error.message || 'Failed to create review'
@@ -187,7 +219,7 @@ router.put('/:id', protect, async (req, res) => {
       review
     });
   } catch (error) {
-    console.error('Update review error:', error);
+    console.log('Update review error:', error);
     res.status(500).json({ error: 'Server error' });
   }
 });
@@ -215,7 +247,7 @@ router.delete('/:id', protect, async (req, res) => {
       message: 'Review deleted successfully'
     });
   } catch (error) {
-    console.error('Delete review error:', error);
+    console.log('Delete review error:', error);
     res.status(500).json({ error: 'Server error' });
   }
 });
@@ -253,8 +285,82 @@ router.post('/:id/helpful', protect, async (req, res) => {
       helpfulCount: review.helpfulCount
     });
   } catch (error) {
-    console.error('Mark helpful error:', error);
+    console.log('Mark helpful error:', error);
     res.status(500).json({ error: 'Server error' });
+  }
+});
+
+// @route   POST /api/reviews/request
+// @desc    Request review from customer
+// @access  Private (Business Owner)
+router.post('/request', protect, async (req, res) => {
+  try {
+    const { businessId, customerEmail, customerName } = req.body;
+
+    if (!businessId || !customerEmail) {
+      return res.status(400).json({ error: 'Business ID and customer email are required' });
+    }
+
+    // Verify user owns this business
+    const business = await Business.findByPk(businessId);
+    if (!business) {
+      return res.status(404).json({ error: 'Business not found' });
+    }
+
+    if (business.ownerId !== req.user.id && req.user.role !== 'admin') {
+      return res.status(403).json({ error: 'You can only request reviews for your own businesses' });
+    }
+
+    // Send email
+    const sendEmail = require('../utils/sendEmail');
+    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
+    const reviewLink = `${frontendUrl}/write-review?businessId=${businessId}`;
+
+    await sendEmail({
+      to: customerEmail,
+      subject: `We'd love your feedback on ${business.name}!`,
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+          <div style="background: linear-gradient(135deg, #3b82f6, #2563eb); color: white; padding: 30px; text-align: center; border-radius: 12px 12px 0 0;">
+            <h1 style="margin: 0; font-size: 24px;">How was your experience?</h1>
+          </div>
+          <div style="background: #f8fafc; padding: 30px; border-radius: 0 0 12px 12px;">
+            <p style="color: #334155; font-size: 16px; line-height: 1.6;">
+              Hi${customerName ? ` ${customerName}` : ''},
+            </p>
+            <p style="color: #334155; font-size: 16px; line-height: 1.6;">
+              Thank you for choosing <strong>${business.name}</strong>! We hope you had a great experience with us.
+            </p>
+            <p style="color: #334155; font-size: 16px; line-height: 1.6;">
+              We would really appreciate it if you could take a moment to share your feedback by leaving us a review.
+            </p>
+            <div style="text-align: center; margin: 30px 0;">
+              <a href="${reviewLink}" style="display: inline-block; background: linear-gradient(135deg, #3b82f6, #2563eb); color: white; padding: 14px 32px; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px;">
+                Leave a Review
+              </a>
+            </div>
+            <p style="color: #64748b; font-size: 14px; text-align: center;">
+              Your feedback helps us improve and helps other customers make informed decisions.
+            </p>
+          </div>
+        </div>
+      `
+    });
+
+    await logActivity({
+      type: 'review_request',
+      description: `Review request sent to ${customerEmail} for ${business.name}`,
+      userId: req.user.id,
+      metadata: { businessId, customerEmail }
+    });
+
+    res.json({
+      success: true,
+      message: 'Review request sent successfully!'
+    });
+  } catch (error) {
+    console.log('Request review error:', error);
+    res.status(500).json({ error: 'Failed to send review request' });
   }
 });
 
@@ -290,7 +396,7 @@ router.post('/:id/respond', protect, async (req, res) => {
       review
     });
   } catch (error) {
-    console.error('Respond to review error:', error);
+    console.log('Respond to review error:', error);
     res.status(500).json({ error: 'Server error' });
   }
 });

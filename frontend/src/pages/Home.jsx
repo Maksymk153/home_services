@@ -9,6 +9,7 @@ const Home = () => {
   const [location, setLocation] = useState('');
   const [categories, setCategories] = useState([]);
   const [businesses, setBusinesses] = useState([]);
+  const [profiles, setProfiles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [businessSuggestions, setBusinessSuggestions] = useState([]);
   const [locationSuggestions, setLocationSuggestions] = useState([]);
@@ -23,14 +24,15 @@ const Home = () => {
 
   const loadData = async () => {
     try {
-      const [categoriesRes, businessesRes] = await Promise.all([
+      const [categoriesRes, businessesRes, profilesRes] = await Promise.all([
         api.get('/categories'),
-        api.get('/businesses?limit=6&featured=true')
+        api.get('/businesses?limit=6&featured=true'),
+        api.get('/businesses/profiles?limit=100').catch(() => ({ data: { profiles: [] } }))
       ]);
       setCategories(categoriesRes.data.categories || []);
       setBusinesses(businessesRes.data.businesses || []);
+      setProfiles(profilesRes.data.profiles || []);
     } catch (error) {
-      console.error('Error loading data:', error);
     } finally {
       setLoading(false);
     }
@@ -55,7 +57,6 @@ const Home = () => {
         setBusinessSuggestions(response.data.businesses || []);
         setShowBusinessSuggestions(true);
       } catch (error) {
-        console.error('Error fetching business suggestions:', error);
       }
     } else {
       setBusinessSuggestions([]);
@@ -78,7 +79,6 @@ const Home = () => {
         setLocationSuggestions(uniqueLocations);
         setShowLocationSuggestions(true);
       } catch (error) {
-        console.error('Error fetching location suggestions:', error);
       }
     } else {
       setLocationSuggestions([]);
@@ -182,9 +182,17 @@ const Home = () => {
       {/* Categories */}
       <section className="categories">
         <div className="container">
-          <div className="categories-header">
-            <h2>Browse Categories</h2>
-            <p>Explore businesses by category</p>
+          <div className="section-header-with-action">
+            <div className="section-title-group">
+              <h2>Browse Categories</h2>
+              <p>Explore businesses by category</p>
+            </div>
+            {categories.length > 8 && (
+              <button className="btn-view-all" onClick={() => navigate('/categories')}>
+                <span>View All Categories</span>
+                <i className="fas fa-arrow-right"></i>
+              </button>
+            )}
           </div>
           {loading ? (
             <div className="loading"><div className="spinner"></div></div>
@@ -200,11 +208,8 @@ const Home = () => {
                 ))}
               </div>
               {categories.length > 8 && (
-                <div className="view-all-categories">
-                  <button className="btn-secondary" onClick={() => navigate('/businesses')}>
-                    <i className="fas fa-th"></i> View All Categories & Businesses
-                  </button>
-                  <p className="categories-count">
+                <div className="view-all-footer">
+                  <p className="items-count">
                     <i className="fas fa-info-circle"></i> Showing 8 of {categories.length} categories
                   </p>
                 </div>
@@ -214,37 +219,112 @@ const Home = () => {
         </div>
       </section>
 
+      {/* Business Profiles Section */}
+      {profiles.length > 0 && (
+        <section className="business-profiles">
+          <div className="container">
+            <div className="section-header-with-action">
+              <div className="section-title-group">
+                <h2>Business Profiles</h2>
+                <p>Discover business owners and their portfolios</p>
+              </div>
+              <button className="btn-view-all" onClick={() => navigate('/profiles')}>
+                <span>View All Profiles</span>
+                <i className="fas fa-arrow-right"></i>
+              </button>
+            </div>
+            {loading ? (
+              <div className="loading"><div className="spinner"></div></div>
+            ) : (
+              <div className="profiles-grid">
+                {profiles.slice(0, 8).map((profile) => (
+                  <div 
+                    key={profile.id} 
+                    className="profile-card"
+                    onClick={() => navigate(`/profile/${profile.id}`)}
+                  >
+                    <div className="profile-card-avatar">
+                      {profile.avatar ? (
+                        <img src={profile.avatar} alt={profile.name} />
+                      ) : (
+                        <i className="fas fa-user-circle"></i>
+                      )}
+                    </div>
+                    <div className="profile-card-content">
+                      <h3>{profile.name}</h3>
+                      <div className="profile-card-stats">
+                        <span>
+                          <i className="fas fa-building"></i>
+                          {profile.businessCount} {profile.businessCount === 1 ? 'Business' : 'Businesses'}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="profile-card-action">
+                      <i className="fas fa-arrow-right"></i>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </section>
+      )}
+
       {/* Top Businesses */}
       <section className="business-listings">
         <div className="container">
-          <h2>Top Rated Business Listings</h2>
+          <div className="section-header-with-action">
+            <div className="section-title-group">
+              <h2>Top Rated Business Listings</h2>
+              <p>Discover the best businesses in your area</p>
+            </div>
+            {businesses.length > 0 && (
+              <button className="btn-view-all" onClick={() => navigate('/businesses')}>
+                <span>View All Businesses</span>
+                <i className="fas fa-arrow-right"></i>
+              </button>
+            )}
+          </div>
           {loading ? (
             <div className="loading"><div className="spinner"></div></div>
           ) : (
-            <div className="listings-grid">
-              {businesses.map((business) => (
-                <div key={business.id} className="listing-card" onClick={() => navigate(`/businesses/${business.id}`)}>
-                  <div className="listing-header">
-                    <h3>{business.name}</h3>
-                    <div className="rating">
-                      <span className="stars">{'★'.repeat(Math.floor(business.ratingAverage))}</span>
-                      <span className="rating-value">{business.ratingAverage}</span>
+            <>
+              <div className="listings-grid">
+                {businesses.map((business) => (
+                  <div key={business.id} className="listing-card" onClick={() => navigate(`/businesses/${business.id}`)}>
+                    {business.owner && (
+                      <div 
+                        className="listing-owner-avatar"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          navigate(`/profile/${business.owner.id}`);
+                        }}
+                        title={`View ${business.owner.name}'s profile`}
+                      >
+                        {business.owner.avatar ? (
+                          <img src={business.owner.avatar} alt={business.owner.name} />
+                        ) : (
+                          <i className="fas fa-user-circle"></i>
+                        )}
+                      </div>
+                    )}
+                    <div className="listing-header">
+                      <h3>{business.name}</h3>
+                      <div className="rating">
+                        <span className="stars">{'★'.repeat(Math.floor(parseFloat(business.ratingAverage) || 0))}</span>
+                        <span className="rating-value">{parseFloat(business.ratingAverage) || 0}</span>
+                      </div>
+                    </div>
+                    <p className="listing-description">{business.description?.substring(0, 100)}...</p>
+                    <div className="listing-info">
+                      <p><i className="fas fa-map-marker-alt"></i> {business.city}, {business.state}</p>
+                      {business.category && <p><i className="fas fa-tag"></i> {business.category.name}</p>}
                     </div>
                   </div>
-                  <p className="listing-description">{business.description?.substring(0, 100)}...</p>
-                  <div className="listing-info">
-                    <p><i className="fas fa-map-marker-alt"></i> {business.city}, {business.state}</p>
-                    {business.category && <p><i className="fas fa-tag"></i> {business.category.name}</p>}
-                  </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            </>
           )}
-          <div className="view-all">
-            <button className="btn-secondary" onClick={() => navigate('/businesses')}>
-              View All Businesses
-            </button>
-          </div>
         </div>
       </section>
     </div>

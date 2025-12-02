@@ -19,7 +19,6 @@ const AdminActivities = () => {
       setActivities(response.data.activities);
       setTotalPages(response.data.pages);
     } catch (error) {
-      console.error('Error loading activities:', error);
       alert('Failed to load activities');
     } finally {
       setLoading(false);

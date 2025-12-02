@@ -21,7 +21,7 @@ router.get('/', async (req, res) => {
       blogs
     });
   } catch (error) {
-    console.error('Get blogs error:', error);
+('Get blogs error:', error);
     res.status(500).json({ error: 'Server error' });
   }
 });
@@ -47,7 +47,7 @@ router.get('/:slug', async (req, res) => {
       blog
     });
   } catch (error) {
-    console.error('Get blog error:', error);
+('Get blog error:', error);
     res.status(500).json({ error: 'Server error' });
   }
 });

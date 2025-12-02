@@ -85,6 +85,11 @@ const Business = sequelize.define('Business', {
     allowNull: true,
     defaultValue: {}
   },
+  socialLinks: {
+    type: DataTypes.JSON,
+    allowNull: true,
+    defaultValue: {}
+  },
   ratingAverage: {
     type: DataTypes.DECIMAL(3, 2),
     defaultValue: 0,
@@ -97,7 +102,20 @@ const Business = sequelize.define('Business', {
     type: DataTypes.INTEGER,
     defaultValue: 0
   },
+  subCategoryId: {
+    type: DataTypes.INTEGER,
+    allowNull: true
+  },
+  logo: {
+    type: DataTypes.TEXT,
+    allowNull: true
+  },
   images: {
+    type: DataTypes.JSON,
+    allowNull: true,
+    defaultValue: []
+  },
+  videos: {
     type: DataTypes.JSON,
     allowNull: true,
     defaultValue: []
@@ -110,6 +128,23 @@ const Business = sequelize.define('Business', {
   isVerified: {
     type: DataTypes.BOOLEAN,
     defaultValue: false
+  },
+  verificationMethod: {
+    type: DataTypes.ENUM('none', 'google', 'facebook', 'document', 'phone'),
+    defaultValue: 'none'
+  },
+  verificationData: {
+    type: DataTypes.JSON,
+    allowNull: true,
+    defaultValue: null
+  },
+  verificationRequestedAt: {
+    type: DataTypes.DATE,
+    allowNull: true
+  },
+  verificationStatus: {
+    type: DataTypes.ENUM('none', 'pending', 'approved', 'rejected'),
+    defaultValue: 'none'
   },
   isActive: {
     type: DataTypes.BOOLEAN,
@@ -126,6 +161,23 @@ const Business = sequelize.define('Business', {
   claimedAt: {
     type: DataTypes.DATE,
     allowNull: true
+  },
+  rejectionReason: {
+    type: DataTypes.TEXT,
+    allowNull: true
+  },
+  rejectedAt: {
+    type: DataTypes.DATE,
+    allowNull: true
+  },
+  approvedAt: {
+    type: DataTypes.DATE,
+    allowNull: true,
+    defaultValue: null
+  },
+  isPublic: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: true
   }
 }, {
   tableName: 'businesses',

@@ -16,7 +16,6 @@ const Blog = () => {
       const response = await api.get('/blogs');
       setBlogs(response.data.blogs || []);
     } catch (error) {
-      console.error('Error loading blogs:', error);
     } finally {
       setLoading(false);
     }

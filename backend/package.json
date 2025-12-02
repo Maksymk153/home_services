@@ -7,7 +7,12 @@
     "start": "node server.js",
     "dev": "nodemon server.js",
     "seed": "node scripts/seed.js",
-    "migrate": "node scripts/migrate.js",
+    "migrate": "node scripts/run-all-migrations.js",
+    "migrate-business": "node scripts/run-business-migrations.js",
+    "migrate-profile": "node scripts/add-user-profile-fields-migration.js",
+    "migrate-avatar": "node scripts/update-avatar-field.js",
+    "migrate-approved-at": "node scripts/add-approved-at-field.js",
+    "check-indexes": "node scripts/check-indexes.js",
     "validate-env": "node scripts/validate-env.js"
   },
   "keywords": [

@@ -20,7 +20,6 @@ const AdminContacts = () => {
       setContacts(response.data.contacts);
       setTotalPages(response.data.pages);
     } catch (error) {
-      console.error('Error loading contacts:', error);
       alert('Failed to load contacts');
     } finally {
       setLoading(false);
@@ -36,7 +35,6 @@ const AdminContacts = () => {
         setSelectedContact(null);
       }
     } catch (error) {
-      console.error('Error updating status:', error);
       alert('Failed to update status');
     }
   };
@@ -52,7 +50,6 @@ const AdminContacts = () => {
         setSelectedContact(null);
       }
     } catch (error) {
-      console.error('Error deleting contact:', error);
       alert('Failed to delete contact');
     }
   };

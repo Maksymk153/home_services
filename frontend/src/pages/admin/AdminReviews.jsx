@@ -8,7 +8,6 @@ const AdminReviews = () => {
   const [filter, setFilter] = useState('all');
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-
   useEffect(() => {
     loadReviews();
   }, [currentPage, filter]);
@@ -16,13 +15,19 @@ const AdminReviews = () => {
   const loadReviews = async () => {
     try {
       setLoading(true);
-      const params = filter === 'pending' ? '?status=pending' : '';
-      const response = await api.get(`/admin/reviews${params}&page=${currentPage}&limit=20`);
-      setReviews(response.data.reviews);
-      setTotalPages(response.data.pages);
+      let queryString = `page=${currentPage}&limit=20`;
+      if (filter === 'pending') {
+        queryString += '&status=pending';
+      }
+      const response = await api.get(`/admin/reviews?${queryString}`);
+      setReviews(response.data.reviews || []);
+      setTotalPages(response.data.pages || 1);
     } catch (error) {
-      console.error('Error loading reviews:', error);
-      alert('Failed to load reviews');
+      setReviews([]);
+      setTotalPages(1);
+      if (error.response?.status !== 429) {
+        alert('Failed to load reviews. Please refresh the page.');
+      }
     } finally {
       setLoading(false);
     }
@@ -34,7 +39,6 @@ const AdminReviews = () => {
       alert('Review approved successfully!');
       loadReviews();
     } catch (error) {
-      console.error('Error approving review:', error);
       alert('Failed to approve review');
     }
   };
@@ -47,7 +51,6 @@ const AdminReviews = () => {
       alert('Review deleted successfully!');
       loadReviews();
     } catch (error) {
-      console.error('Error deleting review:', error);
       alert('Failed to delete review');
     }
   };
@@ -60,19 +63,21 @@ const AdminReviews = () => {
     <div className="admin-table-container">
       <div className="table-header">
         <h2>Reviews Management</h2>
-        <div className="filter-buttons">
-          <button 
-            className={`filter-btn ${filter === 'all' ? 'active' : ''}`}
-            onClick={() => setFilter('all')}
-          >
-            All
-          </button>
-          <button 
-            className={`filter-btn ${filter === 'pending' ? 'active' : ''}`}
-            onClick={() => setFilter('pending')}
-          >
-            Pending Approval
-          </button>
+        <div className="header-actions">
+          <div className="filter-buttons">
+            <button 
+              className={`filter-btn ${filter === 'all' ? 'active' : ''}`}
+              onClick={() => setFilter('all')}
+            >
+              All
+            </button>
+            <button 
+              className={`filter-btn ${filter === 'pending' ? 'active' : ''}`}
+              onClick={() => setFilter('pending')}
+            >
+              Pending Approval
+            </button>
+          </div>
         </div>
       </div>
 
@@ -102,7 +107,7 @@ const AdminReviews = () => {
                   </td>
                   <td>{review.business?.name || 'N/A'}</td>
                   <td>
-                    <span className="rating-stars">
+                    <span className="rating-stars golden">
                       {'★'.repeat(review.rating)}{'☆'.repeat(5 - review.rating)}
                     </span>
                     <br />
@@ -167,9 +172,9 @@ const AdminReviews = () => {
           </button>
         </div>
       )}
-    </div>
+
+      </div>
   );
 };
 
 export default AdminReviews;
-

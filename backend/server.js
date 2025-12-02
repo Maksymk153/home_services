@@ -18,32 +18,86 @@ const blogRoutes = require('./routes/blogs');
 const adminRoutes = require('./routes/admin');
 const searchRoutes = require('./routes/search');
 const contactRoutes = require('./routes/contact');
+const subcategoryRoutes = require('./routes/subcategories');
 
 // Initialize Express app
 const app = express();
 
 // Security middleware
+// Adjust helmet settings based on whether using HTTPS
+const isHttps = process.env.NODE_ENV === 'production' && process.env.USE_HTTPS === 'true';
+
 app.use(helmet({
-  contentSecurityPolicy: false // Disable for API
+  contentSecurityPolicy: false, // Disable for API
+  crossOriginOpenerPolicy: isHttps ? { policy: "same-origin" } : false, // Only enable on HTTPS
+  crossOriginResourcePolicy: false, // More permissive for HTTP
+  originAgentCluster: false // Disable to avoid HTTP warnings
 }));
 
-// Rate limiting
+// Rate limiting - More lenient in development
 const limiter = rateLimit({
   windowMs: (process.env.RATE_LIMIT_WINDOW || 15) * 60 * 1000,
-  max: process.env.RATE_LIMIT_MAX_REQUESTS || 100,
-  message: 'Too many requests from this IP, please try again later.'
+  max: process.env.NODE_ENV === 'development' 
+    ? (process.env.RATE_LIMIT_MAX_REQUESTS || 1000)  // 1000 requests per 15 min in dev
+    : (process.env.RATE_LIMIT_MAX_REQUESTS || 100),  // 100 requests per 15 min in production
+  message: 'Too many requests from this IP, please try again later.',
+  standardHeaders: true,
+  legacyHeaders: false,
+  // Skip rate limiting for health checks
+  skip: (req) => req.path === '/api/health',
+  // Custom handler to provide better error messages
+  handler: (req, res) => {
+    res.status(429).json({
+      error: 'Too many requests from this IP, please try again later.',
+      retryAfter: Math.ceil((req.rateLimit.resetTime - Date.now()) / 1000)
+    });
+  }
 });
 app.use('/api/', limiter);
 
-// CORS configuration
+// CORS configuration - Allow multiple origins for domain and IP access
+const allowedOrigins = process.env.CORS_ORIGIN 
+  ? process.env.CORS_ORIGIN.split(',').map(origin => origin.trim())
+  : process.env.FRONTEND_URL
+    ? [process.env.FRONTEND_URL]
+    : ['http://localhost:3000', 'http://localhost:5173'];
+
 app.use(cors({
-  origin: process.env.CORS_ORIGIN || process.env.FRONTEND_URL || 'http://localhost:3000',
-  credentials: true
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps, Postman, or same-origin requests)
+    if (!origin) return callback(null, true);
+    
+    // Check if origin is in allowed list
+    if (allowedOrigins.indexOf(origin) !== -1 || 
+        allowedOrigins.some(allowed => origin && origin.startsWith(allowed))) {
+      callback(null, true);
+    } else {
+      // For production, be more permissive - allow any origin from same domain/IP pattern
+      // This handles cases where domain and IP both need to work
+      const originHost = origin.replace(/^https?:\/\//, '').split(':')[0];
+      const allowedHosts = allowedOrigins.map(o => o.replace(/^https?:\/\//, '').split(':')[0]);
+      
+      // Allow if origin matches any allowed host (for domain/IP flexibility)
+      if (allowedHosts.some(host => originHost.includes(host) || host.includes(originHost))) {
+        callback(null, true);
+      } else {
+        // In development, allow all origins
+        if (process.env.NODE_ENV === 'development') {
+          callback(null, true);
+        } else {
+          callback(new Error('Not allowed by CORS'));
+        }
+      }
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
-// Body parser middleware
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+// Body parser middleware with increased limit for images
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use(cookieParser());
 
 // Logging middleware
@@ -60,6 +114,7 @@ app.use('/api/blogs', blogRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/search', searchRoutes);
 app.use('/api/contact', contactRoutes);
+app.use('/api/subcategories', subcategoryRoutes);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {

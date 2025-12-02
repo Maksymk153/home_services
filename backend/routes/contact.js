@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { body } = require('express-validator');
 const { Contact } = require('../models');
+const { protect } = require('../middleware/auth');
 const sendEmail = require('../utils/sendEmail');
 const logActivity = require('../utils/logActivity');
 
@@ -89,6 +90,26 @@ Sent from CityLocal 101 Support System
     res.status(500).json({ 
       error: 'Failed to send message. Please try again or call us directly.' 
     });
+  }
+});
+
+// @route   GET /api/contact/my-tickets
+// @desc    Get current user's support tickets
+// @access  Private
+router.get('/my-tickets', protect, async (req, res) => {
+  try {
+    const contacts = await Contact.findAll({
+      where: { email: req.user.email },
+      order: [['createdAt', 'DESC']]
+    });
+
+    res.json({
+      success: true,
+      contacts
+    });
+  } catch (error) {
+    console.log('Get tickets error:', error);
+    res.status(500).json({ error: 'Failed to fetch tickets' });
   }
 });
 

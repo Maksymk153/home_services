@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import api from '../services/api';
 import './Auth.css';
 
 const WriteReview = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { user } = useContext(AuthContext);
   const [businesses, setBusinesses] = useState([]);
   const [formData, setFormData] = useState({ businessId: '', rating: 0, title: '', comment: '' });
@@ -18,15 +19,20 @@ const WriteReview = () => {
       navigate('/login');
       return;
     }
+    
+    // Pre-select business if passed via navigation state
+    if (location.state?.businessId) {
+      setFormData(prev => ({ ...prev, businessId: location.state.businessId }));
+    }
+    
     loadBusinesses();
-  }, [user, navigate]);
+  }, [user, navigate, location.state]);
 
   const loadBusinesses = async () => {
     try {
       const response = await api.get('/businesses?limit=100');
       setBusinesses(response.data.businesses || []);
     } catch (error) {
-      console.error('Error loading businesses:', error);
     }
   };
 
@@ -50,9 +56,14 @@ const WriteReview = () => {
   return (
     <div className="auth-page">
       <div className="auth-container">
-        <h2>Write a Review</h2>
-        {error && <div className="alert alert-error">{error}</div>}
-        {success && <div className="alert alert-success">{success}</div>}
+        <h2><i className="fas fa-star"></i> Write a Review</h2>
+        {location.state?.businessName && (
+          <p style={{ color: '#667eea', marginBottom: '20px', fontSize: '16px' }}>
+            <i className="fas fa-info-circle"></i> Reviewing: <strong>{location.state.businessName}</strong>
+          </p>
+        )}
+        {error && <div className="alert alert-error"><i className="fas fa-exclamation-circle"></i> {error}</div>}
+        {success && <div className="alert alert-success"><i className="fas fa-check-circle"></i> {success}</div>}
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label>Business *</label>

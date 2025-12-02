@@ -19,7 +19,6 @@ const AdminUsers = () => {
       setUsers(response.data.users);
       setTotalPages(response.data.pages);
     } catch (error) {
-      console.error('Error loading users:', error);
       alert('Failed to load users');
     } finally {
       setLoading(false);
@@ -34,7 +33,6 @@ const AdminUsers = () => {
       alert('User deleted successfully!');
       loadUsers();
     } catch (error) {
-      console.error('Error deleting user:', error);
       alert(error.response?.data?.error || 'Failed to delete user');
     }
   };
@@ -47,7 +45,6 @@ const AdminUsers = () => {
       alert(`User ${user.isActive ? 'deactivated' : 'activated'} successfully!`);
       loadUsers();
     } catch (error) {
-      console.error('Error updating user:', error);
       alert('Failed to update user status');
     }
   };

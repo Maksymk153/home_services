@@ -28,7 +28,6 @@ const AdminBlogs = () => {
       setBlogs(response.data.blogs);
       setTotalPages(response.data.pages);
     } catch (error) {
-      console.error('Error loading blogs:', error);
       alert('Failed to load blogs');
     } finally {
       setLoading(false);
@@ -51,7 +50,6 @@ const AdminBlogs = () => {
       setFormData({ title: '', summary: '', content: '', author: 'CityLocal 101 Team', isPublished: false });
       loadBlogs();
     } catch (error) {
-      console.error('Error saving blog:', error);
       alert(error.response?.data?.error || 'Failed to save blog');
     }
   };
@@ -76,7 +74,6 @@ const AdminBlogs = () => {
       alert('Blog deleted successfully!');
       loadBlogs();
     } catch (error) {
-      console.error('Error deleting blog:', error);
       alert('Failed to delete blog');
     }
   };

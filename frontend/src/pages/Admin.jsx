@@ -19,7 +19,6 @@ const Admin = () => {
       setStats(statsRes.data.stats);
       setBusinesses(businessesRes.data.businesses || []);
     } catch (error) {
-      console.error('Error loading admin data:', error);
     } finally {
       setLoading(false);
     }
@@ -30,7 +29,6 @@ const Admin = () => {
       await api.put(`/admin/businesses/${id}/approve`);
       loadData();
     } catch (error) {
-      console.error('Error approving business:', error);
     }
   };
 

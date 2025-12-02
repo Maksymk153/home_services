@@ -44,7 +44,7 @@ router.get('/', async (req, res) => {
       categories: responseCategories
     });
   } catch (error) {
-    console.error('Get categories error:', error);
+('Get categories error:', error);
     res.status(500).json({ error: 'Server error' });
   }
 });
@@ -78,7 +78,7 @@ router.get('/:id', async (req, res) => {
       businesses
     });
   } catch (error) {
-    console.error('Get category error:', error);
+('Get category error:', error);
     res.status(500).json({ error: 'Server error' });
   }
 });
@@ -104,7 +104,7 @@ router.post('/', protect, authorize('admin'), async (req, res) => {
       category
     });
   } catch (error) {
-    console.error('Create category error:', error);
+('Create category error:', error);
     res.status(500).json({ error: 'Server error' });
   }
 });
@@ -136,7 +136,7 @@ router.put('/:id', protect, authorize('admin'), async (req, res) => {
       category
     });
   } catch (error) {
-    console.error('Update category error:', error);
+('Update category error:', error);
     res.status(500).json({ error: 'Server error' });
   }
 });
@@ -179,7 +179,7 @@ router.delete('/:id', protect, authorize('admin'), async (req, res) => {
       message: 'Category deleted successfully' + (businessCount > 0 ? ` (${businessCount} businesses uncategorized)` : '')
     });
   } catch (error) {
-    console.error('Delete category error:', error);
+('Delete category error:', error);
     res.status(500).json({ error: 'Server error' });
   }
 });
