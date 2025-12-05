@@ -1,23 +1,16 @@
 .hero {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #667eea 100%);
-  background-size: 200% 200%;
-  animation: gradientShift 15s ease infinite;
-  color: white;
-  padding: 100px 0;
-  text-align: center;
-  position: relative;
-  overflow: hidden;
+  height: 800px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-image: url('/assets/images/home-bg.jpg');
+  background-size: cover;
+  background-position: center;
+  color: #fff;
 }
 
-.hero::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="grid" width="100" height="100" patternUnits="userSpaceOnUse"><path d="M 100 0 L 0 0 0 100" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
-  opacity: 0.3;
+.hero .container {
+  width: 900px;
 }
 
 @keyframes gradientShift {
@@ -31,22 +24,27 @@
 }
 
 .hero-content h1 {
-  font-size: 48px;
+  font-size: 52px;
+  text-align: center;
   margin-bottom: 20px;
   font-weight: 700;
   letter-spacing: -0.5px;
   line-height: 1.2;
-  text-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+  color: #fff;
+  text-shadow: 2px 3px 6px rgba(0,0,0,.5);
 }
 
 .hero-content p {
-  font-size: 18px;
+  font-size: 20px;
+  text-align: center;
   margin-bottom: 40px;
+  color: #fff;
   opacity: 0.95;
   font-weight: 400;
   max-width: 600px;
   margin-left: auto;
   margin-right: auto;
+  text-shadow: 2px 3px 6px rgba(0,0,0,.5);
 }
 
 .search-box {

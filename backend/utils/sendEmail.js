@@ -29,7 +29,7 @@ const sendEmail = async (options) => {
 
     // Email options
     const mailOptions = {
-      from: process.env.EMAIL_FROM || `CityLocal 101 <${process.env.EMAIL_USER}>`,
+      from: process.env.EMAIL_FROM || `Home Services <${process.env.EMAIL_USER}>`,
       to: options.to,
       subject: options.subject,
       text: options.text || options.message,
